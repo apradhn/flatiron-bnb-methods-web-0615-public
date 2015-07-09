@@ -5,6 +5,9 @@ class Listing < ActiveRecord::Base
   has_many :reviews, :through => :reservations
   has_many :guests, :class_name => "User", :through => :reservations
 
+  include ListingsHelper::InstanceMethods
+  extend ListingsHelper::ClassMethods
+
   # Validations
   validates :address, :listing_type, :title, :description, :price, :neighborhood, presence: true
 
