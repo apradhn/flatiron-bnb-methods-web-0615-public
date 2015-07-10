@@ -8,6 +8,12 @@ module ListingsHelper
       total.to_f / listing.reviews.size
     end    
 
+    def available_for?(checkin, checkout)
+      self.reservations.any? do |reservation|
+        false if checkin.between?(reservation.checkin, reservation.checkout) && checkout.between?(reservation.checkin, reservation.checkout)
+      end
+    end
+
   end
 
   module ClassMethods
