@@ -1,16 +1,12 @@
 class Reservation < ActiveRecord::Base
   belongs_to :listing, inverse_of: :reservations
   belongs_to :guest, :class_name => "User"
-  # belongs_to :host, :class_name => "User"
-
   delegate :reservations, to: :listing
   has_one :review
   has_one :host, through: :listing
 
   # Validations
-  # validate :cannot_make_reservation_on_own_listing, on: :create
   validates :checkin, :checkout, presence: true
-  # validates :guest, presence: true, if: :cannot_make_reservation_on_own_listing
   validate :cannot_make_reservation_on_own_listing
   validate :listing_available_at_checkin
   validate :listing_available_at_checkout
@@ -22,7 +18,6 @@ class Reservation < ActiveRecord::Base
     end
   end
 
-  # 
   def listing_available_at_checkin
     unless listing.available_at_checkin?(self)
       errors.add(:listing, "Listing unavailable at checkin.")
@@ -36,8 +31,7 @@ class Reservation < ActiveRecord::Base
   end
 
   def checkin_less_than_checkout
-    unless errors.any?
-      unless checkin < checkout
+      unless errors.any? && checkin < checkout
         errors.add(:checkin, "Checkin must be before checkout.")
       end
     end
