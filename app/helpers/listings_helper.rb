@@ -8,11 +8,21 @@ module ListingsHelper
       total.to_f / listing.reviews.size
     end    
 
-    def available_for?(checkin, checkout)
-      self.reservations.any? do |reservation|
-        false if checkin.between?(reservation.checkin, reservation.checkout) && checkout.between?(reservation.checkin, reservation.checkout)
+    def available_at_checkin?(pending_reservation)
+      if reservations.empty?
+        true
+      elsif !(pending_reservation.checkin.nil? || pending_reservation.checkout.nil?)
+        reservations.none? {|r|  pending_reservation.status == "pending" && pending_reservation.checkin.between?(r.checkin, r.checkout)}
       end
     end
+
+    def available_at_checkout?(pending_reservation)
+      if reservations.empty?
+        true
+      elsif !(pending_reservation.checkin.nil? || pending_reservation.checkout.nil?)
+        reservations.none? {|r|  pending_reservation.status == "pending" && pending_reservation.checkout.between?(r.checkin, r.checkout)}
+      end
+    end    
 
   end
 

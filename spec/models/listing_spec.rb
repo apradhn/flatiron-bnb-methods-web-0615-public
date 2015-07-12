@@ -77,6 +77,7 @@ describe Listing do
     let(:lisa_simpson) { User.create }
 
     it 'has many reservations' do
+      binding.pry
       expect(listing.reservations).to include(@older_reservation)
       expect(listing.reservations).to include(@recent_reservation)
     end

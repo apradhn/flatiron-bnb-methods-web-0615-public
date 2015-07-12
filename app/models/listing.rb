@@ -1,7 +1,7 @@
 class Listing < ActiveRecord::Base
   belongs_to :neighborhood
   belongs_to :host, :class_name => "User"
-  has_many :reservations
+  has_many :reservations, inverse_of: :listing
   has_many :reviews, :through => :reservations
   has_many :guests, :class_name => "User", :through => :reservations
 
@@ -10,7 +10,7 @@ class Listing < ActiveRecord::Base
 
   # Validations
   validates :address, :listing_type, :title, :description, :price, :neighborhood, presence: true
-
+  # validates_associated :reservations
   # Callback registrations
   after_create :change_user_host_status_to_true
   after_destroy :change_user_host_status_to_false
