@@ -12,6 +12,10 @@ class Reservation < ActiveRecord::Base
   validate :listing_available_at_checkout
   validate :checkin_less_than_checkout
 
+  # Modules
+  include ReservationsHelper::InstanceMethods
+  include ReservationsHelper::ClassMethods
+
   def cannot_make_reservation_on_own_listing
     if guest.listings.include?(listing)
       errors.add(:listing, "Cannot make reservation on own listing.")
@@ -31,7 +35,8 @@ class Reservation < ActiveRecord::Base
   end
 
   def checkin_less_than_checkout
-      unless errors.any? && checkin < checkout
+    unless errors.any?
+      unless checkin < checkout
         errors.add(:checkin, "Checkin must be before checkout.")
       end
     end

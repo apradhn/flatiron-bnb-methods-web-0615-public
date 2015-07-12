@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   # Host associations
   has_many :listings, :foreign_key => 'host_id'
-  has_many :reservations, :through => :listings, inverse_of: :user
+  has_many :reservations, :through => :listings
   has_many :guests, through: :reservations
   has_many :hosts
 
