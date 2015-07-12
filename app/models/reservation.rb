@@ -1,5 +1,5 @@
 class Reservation < ActiveRecord::Base
-  belongs_to :listing, inverse_of: :reservations
+  belongs_to :listing
   belongs_to :guest, :class_name => "User"
   delegate :reservations, to: :listing
   has_one :review
@@ -17,8 +17,10 @@ class Reservation < ActiveRecord::Base
   include ReservationsHelper::ClassMethods
 
   def cannot_make_reservation_on_own_listing
-    if guest.listings.include?(listing)
-      errors.add(:listing, "Cannot make reservation on own listing.")
+    unless guest.nil?
+      if guest.listings.include?(listing)
+        errors.add(:listing, "Cannot make reservation on own listing.")
+      end
     end
   end
 
